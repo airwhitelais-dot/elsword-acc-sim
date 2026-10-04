@@ -7,151 +7,197 @@
 <style>[hidden]{display:none!important} body{margin:0} img{max-width:100%}</style>
 <title>エルソード アクセ組み合わせ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=IBM+Plex+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@800;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Orbitron:wght@600;700&display=swap">
 <style>
-/* Layout: equipment slots on the left, live set + totals readout on the right; stacks on phones */
+/* Layout: two equipment columns (game order) around a core panel; set effects + totals beside or below. Light tech look: silver ground, electric-blue lines, chamfered corners. */
 :root{
-  --bg:#f3f2f6; --panel:#ffffff; --ink:#1d1b26; --muted:#6b6878; --line:#dddbe5;
-  --accent:#9a6a12; --accent-soft:#f6ecd8; --on:#2f7a52; --on-soft:#e2f2e9; --off:#a3a0ae;
-  --chip:#efedf4; --bad:#b0413a; --bad-soft:#f7e3e1;
-  --f-display:"Dela Gothic One","IBM Plex Sans JP",system-ui,sans-serif;
-  --f-body:"IBM Plex Sans JP","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
-  --f-num:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --bg:#e9edf2; --panel:#f7f9fb; --card:#ffffff; --head:#eef2f6; --line:#d3dbe5; --frame:#9eacbe;
+  --ink:#141a22; --ink2:#1f2a38; --muted:#5f6a7a; --title:#0b2a55; --accent:#1a73ff; --accent-d:#1859c9;
+  --chip:#e6ecf3; --iconbg:#eef2f7; --icon-on:#0f2747; --icon-off:#a7b2c1; --off:#8c97a6;
+  --on-bg:#e2f0ff; --on-bd:#5d9cf2; --d:#e0336e;
+  --up-bg:#e3f4ea; --up:#1d7a45; --dn-bg:#fbe5e7; --dn:#c0303c; --now-bg:#fff2cc; --now:#7a5600;
+  --f-title:"M PLUS 1","Zen Kaku Gothic New",system-ui,sans-serif;
+  --f-body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",system-ui,sans-serif;
+  --f-num:"Orbitron","Zen Kaku Gothic New",ui-monospace,monospace;
+  --ch14:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);
+  --ch8:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  color-scheme:light;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#14131a; --panel:#1d1c25; --ink:#ecebf2; --muted:#9d9aab; --line:#2f2d3a;
-  --accent:#e0b04f; --accent-soft:#3a2f17; --on:#6fd29c; --on-soft:#18352a; --off:#6a6778;
-  --chip:#272533; --bad:#f08a80; --bad-soft:#3d2120; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#14131a; --panel:#1d1c25; --ink:#ecebf2; --muted:#9d9aab; --line:#2f2d3a;
-  --accent:#e0b04f; --accent-soft:#3a2f17; --on:#6fd29c; --on-soft:#18352a; --off:#6a6778;
-  --chip:#272533; --bad:#f08a80; --bad-soft:#3d2120; color-scheme:dark}
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.6;padding:24px 16px 48px}
-.wrap{max-width:1180px;margin:0 auto;display:grid;gap:20px}
-header h1{font-family:var(--f-display);font-weight:400;font-size:clamp(22px,3.4vw,30px);margin:0;letter-spacing:.02em;text-wrap:balance}
-header p{margin:4px 0 0;color:var(--muted);max-width:70ch}
-.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.toolbar label{font-size:12px;color:var(--muted);letter-spacing:.04em}
-select,button{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 10px}
-button{cursor:pointer}
-button:hover,select:hover{border-color:var(--accent)}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.6;padding:28px 16px 48px}
+.wrap{max-width:1320px;margin:0 auto;display:grid;gap:20px}
+header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;padding-bottom:16px;border-bottom:1px solid #c3ccd8}
+header .t{display:grid;gap:6px;min-width:0}
+h1{margin:0;font-family:var(--f-title);font-weight:900;font-size:clamp(22px,3.2vw,32px);letter-spacing:.03em;color:var(--title);text-wrap:balance}
+header p{margin:0;color:var(--muted);font-size:13px;max-width:70ch}
+header p a{color:var(--accent-d)}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.toolbar label{font-size:12px;color:var(--muted);letter-spacing:.06em}
+select,button{font:inherit;color:var(--ink)}
+.toolbar select,.toolbar button,.close{background:var(--card);border:1px solid var(--frame);border-radius:0;padding:8px 12px;min-height:40px;cursor:pointer}
+.toolbar select:hover,.toolbar button:hover,.close:hover{border-color:var(--accent)}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;align-items:start}
-@media (max-width:860px){.grid{grid-template-columns:1fr}}
-section.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
-h2{font-size:12px;letter-spacing:.12em;color:var(--muted);margin:0 0 12px;font-weight:700}
-.slots{display:grid;gap:0}
-.slot{display:grid;grid-template-columns:132px minmax(0,1fr);gap:4px 12px;padding:10px 0;border-top:1px solid var(--line);align-items:center}
-.slot:first-child{border-top:0}
-.slot .name{font-weight:700;font-size:13px}
-.slot .name small{display:block;font-weight:400;color:var(--muted);font-size:11px}
-.pick{width:100%;display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:left;padding:7px 10px}
-.pick .cur{font-weight:500;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pick .cur.none{color:var(--off);font-weight:400}
-.pick .go{font-size:11px;color:var(--accent);font-weight:700;letter-spacing:.06em;flex:none}
-/* picker sheet */
-.ov{position:fixed;inset:0;background:color-mix(in srgb,var(--ink) 45%,transparent);display:flex;align-items:center;justify-content:center;padding:24px 16px;z-index:10}
-.sheet{background:var(--bg);border:1px solid var(--line);border-radius:12px;width:min(720px,100%);max-height:min(86vh,900px);display:flex;flex-direction:column;box-shadow:0 18px 50px color-mix(in srgb,var(--ink) 30%,transparent)}
-.sheet-h{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line)}
-.sheet-h h3{margin:0;font-size:16px}
+
+.main{display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start}
+.win{background:var(--panel);clip-path:var(--ch14);box-shadow:inset 0 0 0 1px #fff,inset 0 3px 0 var(--accent);min-width:0}
+.win-h{display:flex;align-items:center;gap:10px;padding:12px 18px;border-bottom:1px solid var(--line);background:var(--head)}
+.win-h::before{content:"";width:7px;height:7px;transform:rotate(45deg);background:var(--accent);flex:none}
+.win-h h2{margin:0;font-family:var(--f-title);font-weight:800;font-size:16px;letter-spacing:.2em;color:var(--title)}
+.win-h .hint{margin-left:auto;font-size:11px;color:var(--muted)}
+.equip-win{flex:999 1 660px}
+.side{flex:1 1 360px;display:grid;gap:20px;min-width:0}
+
+.equip{display:grid;grid-template-columns:minmax(0,1fr) 210px minmax(0,1fr);grid-template-areas:"l c r";gap:14px;padding:16px}
+.col{display:grid;gap:10px;align-content:start;min-width:0}
+.col.l{grid-area:l}.col.r{grid-area:r}.core{grid-area:c}
+@media (max-width:1000px){.equip{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"l r" "c c"}}
+
+.slot{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;padding:10px;background:var(--card);border:1px solid var(--line);border-left:2px solid var(--frame);border-radius:0;cursor:pointer;min-width:0}
+.slot:hover{border-color:var(--accent)}
+.frame{flex:none;width:64px;height:64px;display:grid;place-items:center;background:var(--iconbg);border:2px solid var(--c,#c6cfda);clip-path:var(--ch8);box-shadow:inset 0 0 0 2px #fff,inset 0 0 14px var(--g,transparent);color:var(--icon-on)}
+.slot.empty .frame{color:var(--icon-off)}
+.info{min-width:0;display:flex;flex-direction:column;gap:4px}
+.sl{font-size:11px;letter-spacing:.08em;color:var(--muted)}
+.sn{font-size:14px;font-weight:700;color:var(--ink)}
+.slot.empty .sn{color:var(--off);font-weight:500}
+.fx{display:flex;flex-wrap:wrap;gap:4px}
+@media (max-width:640px){
+  .equip{gap:8px;padding:12px 10px}
+  .col{gap:8px}
+  .slot{padding:6px;gap:8px;align-items:center}
+  .frame{width:48px;height:48px}.frame svg{width:26px;height:26px}
+  .slot .fx{display:none}
+  .sl{font-size:10px;letter-spacing:.02em}
+  .sn{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
+
+.chip{font-size:11px;padding:1px 6px;background:var(--chip);color:var(--ink2);white-space:normal}
+.chip b{font-family:var(--f-num);font-weight:600;font-size:10.5px;margin-left:3px}
+.chip .dd{margin-left:4px;font-size:9px;font-weight:700;color:var(--d)}
+.chip.txt{background:transparent;border:1px dashed var(--frame);color:var(--muted)}
+.empty-msg{font-size:12px;color:var(--off)}
+
+.core{display:flex;flex-direction:column;align-items:center;gap:16px;padding:16px 12px;background:#f2f5f8;border:1px solid var(--line);min-width:0}
+.dial{width:170px;height:170px;border-radius:50%;border:2px solid var(--accent-d);box-shadow:inset 0 0 0 6px #f2f5f8,inset 0 0 0 7px var(--frame),0 0 24px #1a73ff22;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.dial small{font-size:11px;letter-spacing:.2em;color:var(--muted)}
+.dial .n{font-family:var(--f-num);font-weight:700;font-size:42px;line-height:1;color:var(--title)}
+.dial .n span{font-size:17px;color:var(--muted)}
+.core .lbl{font-size:11px;letter-spacing:.12em;color:var(--muted)}
+.core-sets{width:100%;display:grid;gap:8px}
+.cs{display:grid;gap:4px;padding:8px 10px;background:var(--card);border:1px solid var(--line)}
+.cs .nm{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;min-width:0}
+.gem{flex:none;width:10px;height:10px;transform:rotate(45deg);background:var(--c)}
+.pips{display:flex;gap:3px;padding-left:18px}
+.pip{width:18px;height:6px;background:var(--line)}
+.pip.f{background:var(--c)}
+@media (max-width:1000px){.core{flex-direction:row;flex-wrap:wrap;justify-content:center}.core-sets{flex:1 1 220px;width:auto}}
+@media (max-width:640px){.dial{width:120px;height:120px}.dial .n{font-size:30px}}
+
+.sets{padding:14px 16px;display:grid;gap:10px}
+.set{display:grid;gap:6px;padding:10px 12px;background:var(--card);border:1px solid var(--line)}
+.set-h{display:flex;align-items:center;gap:8px}
+.set-h strong{font-size:14px}
+.set-h .cnt{margin-left:auto;font-family:var(--f-num);font-weight:600;font-size:12px;color:var(--accent-d)}
+.tier{display:grid;grid-template-columns:44px minmax(0,1fr);gap:8px;padding:5px 8px;border:1px solid var(--line);font-size:12px}
+.tier .t{font-family:var(--f-num);font-weight:600;font-size:11px;color:var(--off);padding-top:1px}
+.tier .list{display:flex;flex-wrap:wrap;gap:4px}
+.tier:not(.on) .chip{color:var(--off);background:#eef1f5}
+.tier.on{background:var(--on-bg);border-color:var(--on-bd)}
+.tier.on .t{color:var(--accent-d)}
+.tot{padding:6px 18px 12px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:7px 0;border-bottom:1px dashed var(--line)}
+.row:last-child{border-bottom:0}
+.row .k{font-size:13px;color:var(--ink2)}
+.row .k .dd{margin-left:6px;font-size:10px;font-weight:700;color:var(--d)}
+.row .v{font-family:var(--f-num);font-weight:700;font-size:16px;color:var(--title);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* picker */
+.ov{position:fixed;inset:0;background:#0b1a2e66;display:flex;align-items:center;justify-content:center;padding:24px 16px;z-index:10}
+.sheet{width:min(740px,100%);max-height:min(88vh,920px);display:flex;flex-direction:column;background:var(--panel);clip-path:var(--ch14);box-shadow:inset 0 0 0 1px #fff,inset 0 3px 0 var(--accent)}
+.sheet-h{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid var(--line);background:var(--head)}
+.sheet-h .frame{width:52px;height:52px}
+.sheet-h .frame svg{width:28px;height:28px}
+.sheet-h h3{margin:0;font-family:var(--f-title);font-weight:800;font-size:18px;letter-spacing:.06em;color:var(--title)}
 .sheet-h p{margin:0;font-size:12px;color:var(--muted)}
+.sheet-h .close{margin-left:auto;flex:none}
 .sheet-b{overflow-y:auto;padding:12px 16px 16px;display:grid;gap:10px;overscroll-behavior:contain}
-@media (max-width:640px){.ov{align-items:flex-end;padding:0}
- .sheet{border-radius:14px 14px 0 0;max-height:88vh;width:100%}
- .sheet-b{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}}
-.cand{display:grid;gap:8px;text-align:left;width:100%;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:12px;cursor:pointer;font:inherit;color:var(--ink)}
+@media (max-width:640px){
+  .ov{align-items:flex-end;padding:0}
+  .sheet{width:100%;max-height:90vh;clip-path:polygon(14px 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%,0 14px)}
+  .sheet-b{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+  .sheet-h .frame{display:none}
+}
+.cand{display:grid;gap:8px;width:100%;text-align:left;padding:12px 14px;background:var(--card);border:1px solid var(--line);border-left:2px solid var(--frame);border-radius:0;cursor:pointer}
 .cand:hover{border-color:var(--accent)}
 .cand.cur{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
-.cand-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.cand-h{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 .cand-h strong{font-size:15px}
-.badges{display:flex;gap:4px;flex-wrap:wrap}
-.badge{font-size:11px;font-weight:700;padding:1px 8px;border-radius:99px;background:var(--chip);color:var(--muted);white-space:nowrap}
-.badge.now{background:var(--accent-soft);color:var(--accent)}
-.badge.fire{background:var(--on-soft);color:var(--on)}
-.badge.lose{background:var(--bad-soft);color:var(--bad)}
-.row{display:grid;grid-template-columns:72px minmax(0,1fr);gap:8px;align-items:start}
-.row > span:first-child{font-size:11px;color:var(--muted);letter-spacing:.06em;padding-top:2px}
-.row .list{display:flex;flex-wrap:wrap;gap:4px}
-@media (max-width:420px){.row{grid-template-columns:1fr;gap:2px}}
-.df{font-size:12px;border-radius:4px;padding:1px 7px;font-variant-numeric:tabular-nums}
-.df b{font-family:var(--f-num)}
-.df.up{background:var(--on-soft)}
-.df.up b{color:var(--on)}
-.df.down{background:var(--bad-soft)}
-.df.down b{color:var(--bad)}
+.badges{margin-left:auto;display:flex;flex-wrap:wrap;gap:4px}
+.badge{font-size:11px;font-weight:700;padding:1px 9px;background:var(--chip);color:var(--muted);white-space:nowrap}
+.badge.now{background:var(--now-bg);color:var(--now)}
+.badge.fire{background:var(--on-bg);color:var(--accent-d)}
+.badge.lose{background:var(--dn-bg);color:var(--dn)}
+.cr{display:grid;grid-template-columns:76px minmax(0,1fr);gap:8px;align-items:start}
+.cr > span:first-child{font-size:11px;color:var(--muted);letter-spacing:.06em;padding-top:1px}
+.cr .list{display:flex;flex-wrap:wrap;gap:4px}
+@media (max-width:420px){.cr{grid-template-columns:1fr;gap:2px}}
+.df{font-size:11px;padding:1px 7px}
+.df b{font-family:var(--f-num);font-weight:600;font-size:10.5px;margin-left:3px}
+.df.up{background:var(--up-bg)}.df.up b{color:var(--up)}
+.df.down{background:var(--dn-bg)}.df.down b{color:var(--dn)}
 .nochg{font-size:12px;color:var(--off)}
-.slot .fx{grid-column:2;display:flex;flex-wrap:wrap;gap:4px;min-height:0}
-@media (max-width:520px){.slot{grid-template-columns:1fr}.slot .fx{grid-column:1}}
-.chip{background:var(--chip);border-radius:4px;padding:1px 7px;font-size:12px}
-.chip.txt{background:transparent;border:1px dashed var(--line);color:var(--muted)}
-.chip b{font-family:var(--f-num);font-weight:700}
-.chip.d::after{content:"D";margin-left:4px;font-size:10px;color:var(--accent);font-weight:700}
-.empty{color:var(--off);font-size:12px}
-.side{display:grid;gap:20px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
-@media (max-width:860px){.side{position:static}}
-.set{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:6px}
-.set + .set{margin-top:8px}
-.set-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.set-head strong{font-size:14px}
-.pips{display:flex;gap:3px}
-.pip{width:10px;height:10px;border-radius:2px;background:var(--line)}
-.pip.f{background:var(--accent)}
-.tier{display:grid;grid-template-columns:44px minmax(0,1fr);gap:8px;font-size:12px;padding:4px 6px;border-radius:5px;color:var(--off)}
-.tier .t{font-family:var(--f-num);font-weight:700}
-.tier.on{background:var(--on-soft);color:var(--ink)}
-.tier.on .t{color:var(--on)}
-.tier .list{display:flex;flex-wrap:wrap;gap:4px}
-table{width:100%;border-collapse:collapse;font-size:13px}
-td{padding:6px 4px;border-top:1px solid var(--line);vertical-align:top}
-tr:first-child td{border-top:0}
-td.v{text-align:right;font-family:var(--f-num);font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
-td.v .cap{display:block;font-weight:500;color:var(--muted);font-size:11px}
-td.br{color:var(--muted);font-size:11px}
-.note{font-size:12px;color:var(--muted);margin:10px 0 0}
-header p a{color:var(--accent)}
 </style>
 </head>
 <body>
 
 <div class="wrap">
   <header>
-    <h1>アクセサリー組み合わせシミュレーター</h1>
-    <p>レアアバター(右)のアクセ部位ごとにセットを選ぶと、部位の能力値・発動中のセット効果・合計値を表示します。<br>数値やセット効果の情報は<a href="https://elsword-log.com/" target="_blank" rel="noopener">エルソログ</a>さんからお借りしています。</p>
+    <div class="t">
+      <h1>アクセサリー組み合わせシミュレーター</h1>
+      <p>レアアバター(右)のアクセ部位ごとにセットを選ぶと、部位の能力値・発動中のセット効果・合計値を表示します。<br>数値やセット効果の情報は<a href="https://elsword-log.com/" target="_blank" rel="noopener">エルソログ</a>さんからお借りしています。</p>
+    </div>
+    <div class="toolbar">
+      <label for="fill">全部位をまとめて</label>
+      <select id="fill"></select>
+      <button id="reset" type="button">すべて外す</button>
+    </div>
   </header>
 
-  <div class="toolbar">
-    <label for="fill">全部位をまとめて</label>
-    <select id="fill"></select>
-    <button id="reset" type="button">すべて外す</button>
-  </div>
-
-  <div class="grid">
-    <section class="panel">
-      <h2>装備欄</h2>
-      <div class="slots" id="slots"></div>
+  <div class="main">
+    <section class="win equip-win">
+      <div class="win-h"><h2>装備</h2><span class="hint">部位を押すとセットを選べます</span></div>
+      <div class="equip">
+        <div class="col l" id="colL"></div>
+        <div class="core">
+          <div class="dial"><small>装備中</small><span class="n" id="eqn">0<span>/12</span></span><small>部位</small></div>
+          <div class="core-sets"><span class="lbl" id="coreLbl">装備中のセット</span><div id="coreSets" style="display:grid;gap:8px"></div></div>
+        </div>
+        <div class="col r" id="colR"></div>
+      </div>
     </section>
 
     <div class="side">
-      <section class="panel">
-        <h2>セット効果</h2>
-        <div id="sets"></div>
+      <section class="win">
+        <div class="win-h"><h2>セット効果</h2></div>
+        <div class="sets" id="sets"></div>
       </section>
-      <section class="panel">
-        <h2>合計</h2>
-        <table id="totals"></table>
+      <section class="win">
+        <div class="win-h"><h2>合計</h2></div>
+        <div class="tot" id="totals"></div>
       </section>
     </div>
   </div>
 
   <div class="ov" id="ov" hidden>
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="pk-title">
-      <div class="sheet-h"><div><h3 id="pk-title"></h3><p>各候補に「選んだときの合計の変化」が出ます。カードを押すと装備します。</p></div>
-        <button type="button" id="pk-close">閉じる</button></div>
+      <div class="sheet-h">
+        <span class="frame" id="pk-frame"></span>
+        <div><h3 id="pk-title"></h3><p>選んだときの合計の変化を表示しています。カードを押すと装備します。</p></div>
+        <button type="button" class="close" id="pk-close">閉じる</button>
+      </div>
       <div class="sheet-b" id="pk-body"></div>
     </div>
   </div>
-
 </div>
 
 <script>
@@ -168,13 +214,6 @@ const STATS = {
   txt:{l:"",text:true}
 };
 const ORDER = Object.keys(STATS);
-
-const SLOTS = [
-  ["avWeapon","アバター武器"],["acWeapon","アクセサリー武器"],["support","サポートユニット"],
-  ["top","アクセサリー上衣"],["bottom","アクセサリー下衣"],
-  ["faceU","アクセサリー顔上"],["faceM","アクセサリー顔中"],["faceL","アクセサリー顔下"],
-  ["ear","アクセサリー耳"],["arm","アクセサリー腕"],["neck","アクセサリー首"],["ring","アクセサリー指輪"]
-];
 
 // e(stat, value, note?)
 const e=(k,v,n)=>({k,v,n});
@@ -271,95 +310,120 @@ const SETS = [
   bonus:{2:[e("adapt",3)],3:[e("allskill",8),e("cdr",-3)],
    4:[t("覚醒時、周囲のPTメンバーのデバフ解除・HP/MP15%回復（CT30秒）(D)")]}}
 ];
-const byId = Object.fromEntries(SETS.map(s=>[s.id,s]));
+
+const LEFT=["avWeapon","acWeapon","faceU","faceM","faceL","ear"], RIGHT=["support","top","bottom","arm","neck","ring"];
+const SLOTS=[
+  ["avWeapon","アバター武器"],["acWeapon","アクセサリー武器"],["faceU","アクセサリー顔上"],["faceM","アクセサリー顔中"],
+  ["faceL","アクセサリー顔下"],["ear","耳飾り"],["support","サポートユニット"],["top","アクセサリー上衣"],
+  ["bottom","アクセサリー下衣"],["arm","アクセサリー腕"],["neck","首飾り"],["ring","アクセサリー指輪"]
+];
+const SLOTNAME=Object.fromEntries(SLOTS);
+const ICON={
+  avWeapon:'<path d="M20 4v5l-9.5 9.5-5-5L15 4h5z"/><path d="M8 16l-4 4"/><path d="M6 13l5 5"/>',
+  acWeapon:'<circle cx="12" cy="8" r="4.5"/><path d="M12 12.5V21"/><path d="M8.5 17h7"/><path d="M10 6.5l2 2 2-2"/>',
+  support:'<circle cx="12" cy="12" r="4"/><path d="M4 8c2-3 4.5-3 6-1"/><path d="M20 8c-2-3-4.5-3-6-1"/><path d="M9 17l-2 4"/><path d="M15 17l2 4"/>',
+  top:'<path d="M8 3L4 6l2 4 2-1v12h8V9l2 1 2-4-4-3c-1 2-2.5 3-4 3S9 5 8 3z"/>',
+  bottom:'<path d="M7 3h10l2 18h-5l-2-10-2 10H5L7 3z"/><path d="M7 7h10"/>',
+  faceU:'<path d="M3 16l2-9 4 4 3-6 3 6 4-4 2 9H3z"/><path d="M3 19.5h18"/>',
+  faceM:'<circle cx="7" cy="13" r="3.5"/><circle cx="17" cy="13" r="3.5"/><path d="M10.5 13h3"/><path d="M3.5 13L2 10"/><path d="M20.5 13L22 10"/>',
+  faceL:'<path d="M4 9c3 2 13 2 16 0v4c0 4-4 7-8 7s-8-3-8-7V9z"/><path d="M8 14h8"/>',
+  ear:'<path d="M12 3a3 3 0 0 1 3 3c0 2-3 3-3 5"/><path d="M12 12l-4 5 4 4 4-4z"/>',
+  arm:'<ellipse cx="12" cy="12" rx="8.5" ry="5"/><ellipse cx="12" cy="12" rx="5" ry="2.5"/>',
+  neck:'<path d="M5 4c0 6 3 10 7 10s7-4 7-10"/><path d="M12 14l-2.5 3 2.5 3 2.5-3z"/>',
+  ring:'<circle cx="12" cy="14.5" r="6"/><path d="M9 6l3-3 3 3-3 3z"/>'
+};
+const svg=(k,s=34)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
+const SETCOLOR={phantom:"#5b4ee0",veritas:"#9b3fd6",hwarang:"#d23f6e",aries:"#e0679b",grandi:"#2f9e57",crest:"#b0762a",
+  tiger:"#e08a1e",erebus:"#c63a2e",vita:"#1aa3a3",abyss:"#2a5bd7",empire:"#b8962e",dragon:"#3c8f8a",tourbillon:"#7a6ad8",
+  bloody:"#9e1f3a",aether:"#4aa8e0",nox:"#4b4f68",automata:"#8a7f4a",flos:"#d45fb8",sacred:"#7c9a2b",sea:"#1f7fb8"};
+const byId=Object.fromEntries(SETS.map(s=>[s.id,s]));
 
 // ---- state ----
 const KEY="elsAccSim.v2";
-let sel={};
-try{ sel = JSON.parse(localStorage.getItem(KEY)||"null") || null; }catch(_){ sel=null; }
-if(!sel){ // example loadout
-  sel={support:"phantom",top:"phantom",avWeapon:"erebus",bottom:"aries",faceU:"aries",ring:"aries",faceL:"erebus"};
-}
+let sel=null;
+try{ sel=JSON.parse(localStorage.getItem(KEY)||"null"); }catch(_){ sel=null; }
+if(!sel||typeof sel!=="object") sel={support:"phantom",top:"phantom",avWeapon:"erebus",bottom:"aries",faceU:"aries",ring:"aries",faceL:"erebus"};
 const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(sel)); }catch(_){} };
 
 const fmt=(k,v)=>(v>0?"+":"")+v.toLocaleString("ja-JP")+(STATS[k].u??"%");
-const chip=x=>{if(x.k==="txt")return `<span class="chip txt">${x.n}</span>`;const s=STATS[x.k];return `<span class="chip${s.d?" d":""}">${s.l} <b>${fmt(x.k,x.v)}</b>${x.n?` <span style="color:var(--muted)">(${x.n})</span>`:""}</span>`;};
+const chip=x=>{
+  if(x.k==="txt") return `<span class="chip txt">${x.n}</span>`;
+  const s=STATS[x.k];
+  return `<span class="chip">${s.l}<b>${fmt(x.k,x.v)}</b>${x.n?` <span style="color:var(--muted)">(${x.n})</span>`:""}${s.d?'<span class="dd">D</span>':""}</span>`;
+};
 
-// ---- build slot rows ----
-const slotsEl=document.getElementById("slots");
-const SLOTNAME=Object.fromEntries(SLOTS);
-slotsEl.innerHTML = SLOTS.map(([k,l])=>{
-  const n = SETS.filter(s=>s.items[k]).length;
-  return `<div class="slot"><span class="name">${l}<small>${n}セットに存在</small></span>
-    <button type="button" class="pick" id="s-${k}" data-slot="${k}" aria-haspopup="dialog"><span class="cur"></span><span class="go">選ぶ</span></button>
-    <div class="fx" id="fx-${k}"></div></div>`;
-}).join("");
-slotsEl.addEventListener("click",ev=>{const b=ev.target.closest(".pick");if(b) openPicker(b.dataset.slot);});
-
-const fill=document.getElementById("fill");
-fill.innerHTML=`<option value="">セットを選択…</option>`+SETS.map(s=>`<option value="${s.id}">${s.name}（${Object.keys(s.items).length}部位）</option>`).join("");
-fill.addEventListener("change",()=>{const id=fill.value;if(!id)return;
-  for(const k of Object.keys(byId[id].items)) sel[k]=id; save(); render(); fill.value="";});
-document.getElementById("reset").addEventListener("click",()=>{sel={};save();render();});
-
-// ---- render ----
-// totals for any loadout
 function compute(sl){
-  const tot={}, breakdown={}, counts={}, texts=new Set(), tiers=new Set();
-  const add=(x,src)=>{if(x.k==="txt"){texts.add(x.n);return;}tot[x.k]=(tot[x.k]||0)+x.v;(breakdown[x.k]=breakdown[x.k]||[]).push(src);};
-  for(const [k] of SLOTS){const id=sl[k]; if(!id||!byId[id]?.items[k]) continue;
-    counts[id]=(counts[id]||0)+1; byId[id].items[k].forEach(x=>add(x,"部位"));}
-  for(const id in counts){const s=byId[id];
-    for(const t of Object.keys(s.bonus).map(Number)) if(counts[id]>=t){tiers.add(id+":"+t); s.bonus[t].forEach(x=>add(x,"セット"));}}
-  return {tot,breakdown,counts,texts,tiers};
+  const tot={}, counts={}, texts=new Set(), tiers=new Set();
+  const add=x=>{ if(x.k==="txt"){texts.add(x.n);return;} tot[x.k]=(tot[x.k]||0)+x.v; };
+  for(const [k] of SLOTS){ const id=sl[k]; if(!id||!byId[id]?.items[k]) continue; counts[id]=(counts[id]||0)+1; byId[id].items[k].forEach(add); }
+  for(const id in counts){ const s=byId[id];
+    for(const t of Object.keys(s.bonus).map(Number)) if(counts[id]>=t){ tiers.add(id+":"+t); s.bonus[t].forEach(add); } }
+  return {tot,counts,texts,tiers};
 }
 const LOWER_BETTER=new Set(["cdr","mp"]);
 
-function render(){
-  const R=compute(sel), tot=R.tot, breakdown=R.breakdown, counts=R.counts;
-  for(const [k] of SLOTS){
-    const id=sel[k], box=document.getElementById("fx-"+k), cur=document.querySelector("#s-"+k+" .cur");
-    if(!id||!byId[id]?.items[k]){ box.innerHTML='<span class="empty">未装備</span>'; cur.textContent="未装備"; cur.className="cur none"; continue; }
-    box.innerHTML=byId[id].items[k].map(chip).join("")||'<span class="empty">能力なし（セット効果のみ）</span>'; cur.textContent=byId[id].name; cur.className="cur";
-  }
-  // sets
-  const used=SETS.filter(s=>counts[s.id]);
-  document.getElementById("sets").innerHTML = used.length? used.map(s=>{
-    const c=counts[s.id];
-    const tiers=Object.keys(s.bonus).map(Number).map(t=>{
-      const on=c>=t;
-      return `<div class="tier${on?" on":""}"><span class="t">${t}set</span><span class="list">${s.bonus[t].map(chip).join("")}</span></div>`;
-    }).join("");
-    return `<div class="set"><div class="set-head"><strong>${s.name}</strong>
-      <span class="pips" aria-label="${c}/5部位">${[1,2,3,4,5].map(i=>`<span class="pip${i<=c?" f":""}"></span>`).join("")}</span></div>${tiers}</div>`;
-  }).join("") : '<p class="empty">部位を選ぶとここにセット効果が出ます。</p>';
-  // totals
-  const rows=ORDER.filter(k=>tot[k]).map(k=>{
-    const s=STATS[k];
-    return `<tr><td>${s.l}${s.d?' <span class="chip d" style="padding:0 4px"></span>':""}</td><td class="v">${fmt(k,tot[k])}</td></tr>`;
-  });
-  document.getElementById("totals").innerHTML = rows.join("") || '<tr><td class="empty">まだ何も装備していません。</td></tr>';
+// ---- slot cards ----
+function slotCard(k){
+  return `<button type="button" class="slot" data-slot="${k}" id="s-${k}">
+    <span class="frame">${svg(k)}</span>
+    <span class="info"><span class="sl">${SLOTNAME[k]}</span><span class="sn"></span><span class="fx"></span></span>
+  </button>`;
 }
+document.getElementById("colL").innerHTML=LEFT.map(slotCard).join("");
+document.getElementById("colR").innerHTML=RIGHT.map(slotCard).join("");
+document.querySelector(".equip").addEventListener("click",ev=>{const b=ev.target.closest(".slot"); if(b) openPicker(b.dataset.slot);});
+
+const fill=document.getElementById("fill");
+fill.innerHTML=`<option value="">セットを選択…</option>`+SETS.map(s=>`<option value="${s.id}">${s.name}（${Object.keys(s.items).length}部位）</option>`).join("");
+fill.addEventListener("change",()=>{const id=fill.value; if(!id) return; for(const k of Object.keys(byId[id].items)) sel[k]=id; save(); render(); fill.value="";});
+document.getElementById("reset").addEventListener("click",()=>{sel={}; save(); render();});
+
+function render(){
+  const R=compute(sel);
+  let n=0;
+  for(const [k] of SLOTS){
+    const el=document.getElementById("s-"+k), id=sel[k], set=id&&byId[id]?.items[k]?byId[id]:null;
+    const fr=el.querySelector(".frame"), sn=el.querySelector(".sn"), fx=el.querySelector(".fx");
+    el.classList.toggle("empty",!set);
+    if(set){ n++; const c=SETCOLOR[id]; fr.style.setProperty("--c",c); fr.style.setProperty("--g",c+"40");
+      sn.textContent=set.name; fx.innerHTML=set.items[k].map(chip).join("")||'<span class="empty-msg">能力なし（セット効果のみ）</span>';
+      el.setAttribute("aria-label",`${SLOTNAME[k]}：${set.name}（変更する）`);
+    } else { fr.style.removeProperty("--c"); fr.style.removeProperty("--g"); sn.textContent="未装備"; fx.innerHTML="";
+      el.setAttribute("aria-label",`${SLOTNAME[k]}：未装備（選ぶ）`); }
+  }
+  document.getElementById("eqn").innerHTML=`${n}<span>/12</span>`;
+  const used=SETS.filter(s=>R.counts[s.id]).sort((a,b)=>R.counts[b.id]-R.counts[a.id]);
+  document.getElementById("coreSets").innerHTML=used.length?used.map(s=>{const c=R.counts[s.id];
+    return `<div class="cs" style="--c:${SETCOLOR[s.id]}"><span class="nm"><span class="gem"></span>${s.name}</span>
+      <span class="pips">${[1,2,3,4,5].map(i=>`<span class="pip${i<=c?" f":""}"></span>`).join("")}</span></div>`;}).join(""):'<span class="empty-msg">まだ何も装備していません</span>';
+  document.getElementById("sets").innerHTML=used.length?used.map(s=>{const c=R.counts[s.id];
+    const tiers=Object.keys(s.bonus).map(Number).map(t=>`<div class="tier${c>=t?" on":""}"><span class="t">${t}SET</span><span class="list">${s.bonus[t].map(chip).join("")}</span></div>`).join("");
+    return `<div class="set"><div class="set-h"><span class="gem" style="--c:${SETCOLOR[s.id]}"></span><strong>${s.name}</strong><span class="cnt">${c}/5</span></div>${tiers}</div>`;}).join(""):'<p class="empty-msg">部位を選ぶとここにセット効果が出ます。</p>';
+  const rows=ORDER.filter(k=>R.tot[k]).map(k=>{const s=STATS[k];
+    return `<div class="row"><span class="k">${s.l}${s.d?'<span class="dd">D</span>':""}</span><span class="v">${fmt(k,R.tot[k])}</span></div>`;});
+  document.getElementById("totals").innerHTML=rows.join("")||'<p class="empty-msg">まだ何も装備していません。</p>';
+}
+
 // ---- picker ----
 const ov=document.getElementById("ov"), pkBody=document.getElementById("pk-body");
 let pkSlot=null;
 function openPicker(k){
   pkSlot=k;
   document.getElementById("pk-title").textContent=SLOTNAME[k]+"を選ぶ";
+  const fr=document.getElementById("pk-frame"); fr.innerHTML=svg(k,28);
+  const curId=sel[k]; if(curId){fr.style.setProperty("--c",SETCOLOR[curId]);fr.style.setProperty("--g",SETCOLOR[curId]+"40");}else{fr.style.removeProperty("--c");fr.style.removeProperty("--g");}
   const base=compute(sel);
-  const cands=[...SETS.filter(s=>s.items[k]).map(s=>s.id), ""];
-  cands.sort((a,b)=>(b===(sel[k]||"__"))-(a===(sel[k]||"__")));
+  const cands=[...SETS.filter(s=>s.items[k]).map(s=>s.id),""];
+  cands.sort((a,b)=>(b===(curId||"__"))-(a===(curId||"__")));
   pkBody.innerHTML=cands.map(id=>card(k,id,base)).join("");
   ov.hidden=false; document.body.style.overflow="hidden";
   (pkBody.querySelector(".cand.cur")||pkBody.querySelector(".cand"))?.focus();
   pkBody.scrollTop=0;
 }
-function closePicker(){ov.hidden=true;document.body.style.overflow="";const b=document.getElementById("s-"+pkSlot);pkSlot=null;b?.focus();}
-
+function closePicker(){ ov.hidden=true; document.body.style.overflow=""; const b=document.getElementById("s-"+pkSlot); pkSlot=null; b?.focus(); }
 function card(k,id,base){
   const nsel={...sel}; if(id) nsel[k]=id; else delete nsel[k];
   const R=compute(nsel), isCur=(sel[k]||"")===id, set=id?byId[id]:null;
-  // badges
   const badges=[];
   if(isCur) badges.push('<span class="badge now">装備中</span>');
   const gained=[...R.tiers].filter(x=>!base.tiers.has(x)), lost=[...base.tiers].filter(x=>!R.tiers.has(x));
@@ -373,27 +437,26 @@ function card(k,id,base){
   }
   for(const x of lost){const [sid,t]=x.split(":"); badges.push(`<span class="badge lose">${byId[sid].name} ${t}セット解除</span>`);}
   for(const x of gained){const [sid,t]=x.split(":"); if(sid!==id) badges.push(`<span class="badge fire">${byId[sid].name} ${t}セット発動</span>`);}
-  // diff
   const diffs=[];
   for(const st of ORDER){ if(st==="txt") continue;
     const a=base.tot[st]||0, b=R.tot[st]||0; if(a===b) continue;
     const good=LOWER_BETTER.has(st)? b<a : b>a;
-    diffs.push(`<span class="df ${good?"up":"down"}">${STATS[st].l} <b>${a?fmt(st,a):"0"}→${b?fmt(st,b):"0"}</b></span>`);
+    diffs.push(`<span class="df ${good?"up":"down"}">${STATS[st].l}<b>${a?fmt(st,a):"0"}→${b?fmt(st,b):"0"}</b></span>`);
   }
   for(const n of R.texts) if(!base.texts.has(n)) diffs.push(`<span class="df up">＋${n}</span>`);
   for(const n of base.texts) if(!R.texts.has(n)) diffs.push(`<span class="df down">－${n}</span>`);
-  const own = set? (set.items[k].map(chip).join("")||'<span class="nochg">能力なし（セット効果のみ）</span>') : '<span class="nochg">この部位を外します</span>';
+  const own=set?(set.items[k].map(chip).join("")||'<span class="nochg">能力なし（セット効果のみ）</span>'):'<span class="nochg">この部位を外します</span>';
   return `<button type="button" class="cand${isCur?" cur":""}" data-id="${id}">
-    <span class="cand-h"><strong>${set?set.name:"外す"}</strong><span class="badges">${badges.join("")}</span></span>
-    <span class="row"><span>部位の能力</span><span class="list">${own}</span></span>
-    <span class="row"><span>合計の変化</span><span class="list">${diffs.join("")||'<span class="nochg">変化なし</span>'}</span></span>
+    <span class="cand-h"><span class="gem" style="--c:${set?SETCOLOR[id]:"#c6cfda"}"></span><strong>${set?set.name:"外す"}</strong><span class="badges">${badges.join("")}</span></span>
+    <span class="cr"><span>部位の能力</span><span class="list">${own}</span></span>
+    <span class="cr"><span>合計の変化</span><span class="list">${diffs.join("")||'<span class="nochg">変化なし</span>'}</span></span>
   </button>`;
 }
 pkBody.addEventListener("click",ev=>{const c=ev.target.closest(".cand"); if(!c) return;
   const id=c.dataset.id; if(id) sel[pkSlot]=id; else delete sel[pkSlot]; save(); render(); closePicker();});
 document.getElementById("pk-close").addEventListener("click",closePicker);
-ov.addEventListener("click",ev=>{if(ev.target===ov) closePicker();});
-document.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&!ov.hidden) closePicker();});
+ov.addEventListener("click",ev=>{ if(ev.target===ov) closePicker(); });
+document.addEventListener("keydown",ev=>{ if(ev.key==="Escape"&&!ov.hidden) closePicker(); });
 
 render();
 </script>
