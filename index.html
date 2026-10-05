@@ -88,6 +88,7 @@ select,button{font:inherit;color:var(--ink)}
 .cs .nm{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;min-width:0}
 .gem{flex:none;width:10px;height:10px;transform:rotate(45deg);background:var(--c)}
 .pips{display:flex;gap:3px;padding-left:18px}
+.pips .pip{flex:0 1 18px;min-width:6px}
 .pip{width:18px;height:6px;background:var(--line)}
 .pip.f{background:var(--c)}
 @media (max-width:1000px){.core{flex-direction:row;flex-wrap:wrap;justify-content:center}.core-sets{flex:1 1 220px;width:auto}}
@@ -308,7 +309,14 @@ const SETS = [
    top:[e("flatAtk",40),e("crit",4)],
    bottom:[e("flatAtk",40),e("maxim",4)]},
   bonus:{2:[e("adapt",3)],3:[e("allskill",8),e("cdr",-3)],
-   4:[t("覚醒時、周囲のPTメンバーのデバフ解除・HP/MP15%回復（CT30秒）(D)")]}}
+   4:[t("覚醒時、周囲のPTメンバーのデバフ解除・HP/MP15%回復（CT30秒）(D)")]}},
+ {id:"elios",name:"エリオス守護騎士団",cap:55,items:{
+   faceU:[e("crit",3),e("aspd",1)], faceM:[e("crit",3),e("aspd",1)], faceL:[e("crit",3),e("aspd",1)],
+   top:[e("maxim",3),e("aspd",1)], arm:[e("maxim",3),e("aspd",1)], bottom:[e("maxim",3),e("aspd",1)],
+   ring:[e("crit",2),e("allskill",2)], neck:[e("adapt",2),e("aspd",2)],
+   acWeapon:[e("adapt",2),e("maxim",2)], support:[e("crit",2),e("maxim",2)], ear:[e("crit",2),e("maxim",2)],
+   avWeapon:[e("allskill",4)]},
+  bonus:{3:[e("allskill",5),e("cdr",-5)],4:[e("adapt",5),e("aspd",10)]}}
 ];
 
 const LEFT=["avWeapon","acWeapon","faceU","faceM","faceL","ear"], RIGHT=["support","top","bottom","arm","neck","ring"];
@@ -335,7 +343,7 @@ const ICON={
 const svg=(k,s=34)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
 const SETCOLOR={phantom:"#5b4ee0",veritas:"#9b3fd6",hwarang:"#d23f6e",aries:"#e0679b",grandi:"#2f9e57",crest:"#b0762a",
   tiger:"#e08a1e",erebus:"#c63a2e",vita:"#1aa3a3",abyss:"#2a5bd7",empire:"#b8962e",dragon:"#3c8f8a",tourbillon:"#7a6ad8",
-  bloody:"#9e1f3a",aether:"#4aa8e0",nox:"#4b4f68",automata:"#8a7f4a",flos:"#d45fb8",sacred:"#7c9a2b",sea:"#1f7fb8"};
+  bloody:"#9e1f3a",aether:"#4aa8e0",nox:"#4b4f68",automata:"#8a7f4a",flos:"#d45fb8",sacred:"#7c9a2b",sea:"#1f7fb8",elios:"#c48a16"};
 const byId=Object.fromEntries(SETS.map(s=>[s.id,s]));
 
 // ---- state ----
@@ -395,10 +403,10 @@ function render(){
   const used=SETS.filter(s=>R.counts[s.id]).sort((a,b)=>R.counts[b.id]-R.counts[a.id]);
   document.getElementById("coreSets").innerHTML=used.length?used.map(s=>{const c=R.counts[s.id];
     return `<div class="cs" style="--c:${SETCOLOR[s.id]}"><span class="nm"><span class="gem"></span>${s.name}</span>
-      <span class="pips">${[1,2,3,4,5].map(i=>`<span class="pip${i<=c?" f":""}"></span>`).join("")}</span></div>`;}).join(""):'<span class="empty-msg">まだ何も装備していません</span>';
+      <span class="pips">${Array.from({length:Object.keys(s.items).length},(_,i)=>`<span class="pip${i<c?" f":""}"></span>`).join("")}</span></div>`;}).join(""):'<span class="empty-msg">まだ何も装備していません</span>';
   document.getElementById("sets").innerHTML=used.length?used.map(s=>{const c=R.counts[s.id];
     const tiers=Object.keys(s.bonus).map(Number).map(t=>`<div class="tier${c>=t?" on":""}"><span class="t">${t}SET</span><span class="list">${s.bonus[t].map(chip).join("")}</span></div>`).join("");
-    return `<div class="set"><div class="set-h"><span class="gem" style="--c:${SETCOLOR[s.id]}"></span><strong>${s.name}</strong><span class="cnt">${c}/5</span></div>${tiers}</div>`;}).join(""):'<p class="empty-msg">部位を選ぶとここにセット効果が出ます。</p>';
+    return `<div class="set"><div class="set-h"><span class="gem" style="--c:${SETCOLOR[s.id]}"></span><strong>${s.name}</strong><span class="cnt">${c}/${Object.keys(s.items).length}</span></div>${tiers}</div>`;}).join(""):'<p class="empty-msg">部位を選ぶとここにセット効果が出ます。</p>';
   const rows=ORDER.filter(k=>R.tot[k]).map(k=>{const s=STATS[k];
     return `<div class="row"><span class="k">${s.l}${s.d?'<span class="dd">D</span>':""}</span><span class="v">${fmt(k,R.tot[k])}</span></div>`;});
   document.getElementById("totals").innerHTML=rows.join("")||'<p class="empty-msg">まだ何も装備していません。</p>';
