@@ -94,11 +94,18 @@ select,button{font:inherit;color:var(--ink)}
 @media (max-width:1000px){.core{flex-direction:row;flex-wrap:wrap;justify-content:center}.core-sets{flex:1 1 220px;width:auto}}
 @media (max-width:640px){.dial{width:120px;height:120px}.dial .n{font-size:30px}}
 
-.sets{padding:14px 16px;display:grid;gap:10px}
+.sets{padding:0 16px 14px;display:grid;gap:10px}
+.sets-note{margin:0;padding:10px 16px 8px;font-size:12px;color:var(--muted)}
 .set{display:grid;gap:6px;padding:10px 12px;background:var(--card);border:1px solid var(--line)}
 .set-h{display:flex;align-items:center;gap:8px}
 .set-h strong{font-size:14px}
 .set-h .cnt{margin-left:auto;font-family:var(--f-num);font-weight:600;font-size:12px;color:var(--accent-d)}
+.set-h .tg{flex:none;font-size:11px;font-weight:700;letter-spacing:.06em;padding:3px 10px;min-height:28px;border:1px solid var(--frame);background:var(--card);color:var(--muted);border-radius:0;cursor:pointer}
+.set-h .tg.is-on{background:var(--accent);border-color:var(--accent);color:#fff}
+.set-h .tg:disabled{opacity:.45;cursor:not-allowed}
+.set.off{background:#f4f6f9}
+.set.off strong{color:var(--muted)}
+.cs.off{opacity:.5}
 .tier{display:grid;grid-template-columns:44px minmax(0,1fr);gap:8px;padding:5px 8px;border:1px solid var(--line);font-size:12px}
 .tier .t{font-family:var(--f-num);font-weight:600;font-size:11px;color:var(--off);padding-top:1px}
 .tier .list{display:flex;flex-wrap:wrap;gap:4px}
@@ -179,7 +186,8 @@ select,button{font:inherit;color:var(--ink)}
 
     <div class="side">
       <section class="win">
-        <div class="win-h"><h2>セット効果</h2></div>
+        <div class="win-h"><h2>セット効果</h2><span class="hint" id="actn"></span></div>
+        <p class="sets-note">セット効果を有効にできるのは3セットまでです。「有効／無効」で切り替えられます。</p>
         <div class="sets" id="sets"></div>
       </section>
       <section class="win">
@@ -347,11 +355,23 @@ const SETCOLOR={phantom:"#5b4ee0",veritas:"#9b3fd6",hwarang:"#d23f6e",aries:"#e0
 const byId=Object.fromEntries(SETS.map(s=>[s.id,s]));
 
 // ---- state ----
-const KEY="elsAccSim.v2";
-let sel=null;
-try{ sel=JSON.parse(localStorage.getItem(KEY)||"null"); }catch(_){ sel=null; }
+const KEY="elsAccSim.v3", MAX_ACTIVE=3;
+let sel=null, active=null;
+try{ const v=JSON.parse(localStorage.getItem(KEY)||"null"); if(v&&typeof v==="object"){ sel=v.sel; active=v.active; } }catch(_){}
+if(!sel||typeof sel!=="object"){ try{ sel=JSON.parse(localStorage.getItem("elsAccSim.v2")||"null"); }catch(_){ sel=null; } }
 if(!sel||typeof sel!=="object") sel={support:"phantom",top:"phantom",avWeapon:"erebus",bottom:"aries",faceU:"aries",ring:"aries",faceL:"erebus"};
-const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(sel)); }catch(_){} };
+function countsOf(sl){ const c={}; for(const [k] of SLOTS){ const id=sl[k]; if(id&&byId[id]?.items[k]) c[id]=(c[id]||0)+1; } return c; }
+if(!Array.isArray(active)){ const c=countsOf(sel); active=Object.keys(c).sort((a,b)=>c[b]-c[a]).slice(0,MAX_ACTIVE); }
+// keep only equipped sets; a set that newly appears is switched on while a slot is free
+function nextActive(oldSel,newSel,act){
+  const oc=countsOf(oldSel), nc=countsOf(newSel);
+  const a=act.filter(id=>nc[id]);
+  for(const id of Object.keys(nc)) if(!oc[id] && !a.includes(id) && a.length<MAX_ACTIVE) a.push(id);
+  return a;
+}
+active=nextActive(sel,sel,active);
+const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify({sel,active})); }catch(_){} };
+function applySel(newSel){ active=nextActive(sel,newSel,active); sel=newSel; save(); render(); }
 
 const fmt=(k,v)=>(v>0?"+":"")+v.toLocaleString("ja-JP")+(STATS[k].u??"%");
 const chip=x=>{
@@ -360,11 +380,11 @@ const chip=x=>{
   return `<span class="chip">${s.l}<b>${fmt(x.k,x.v)}</b>${x.n?` <span style="color:var(--muted)">(${x.n})</span>`:""}${s.d?'<span class="dd">D</span>':""}</span>`;
 };
 
-function compute(sl){
+function compute(sl,act){
   const tot={}, counts={}, texts=new Set(), tiers=new Set();
   const add=x=>{ if(x.k==="txt"){texts.add(x.n);return;} tot[x.k]=(tot[x.k]||0)+x.v; };
   for(const [k] of SLOTS){ const id=sl[k]; if(!id||!byId[id]?.items[k]) continue; counts[id]=(counts[id]||0)+1; byId[id].items[k].forEach(add); }
-  for(const id in counts){ const s=byId[id];
+  for(const id in counts){ if(!act.includes(id)) continue; const s=byId[id];
     for(const t of Object.keys(s.bonus).map(Number)) if(counts[id]>=t){ tiers.add(id+":"+t); s.bonus[t].forEach(add); } }
   return {tot,counts,texts,tiers};
 }
@@ -383,11 +403,13 @@ document.querySelector(".equip").addEventListener("click",ev=>{const b=ev.target
 
 const fill=document.getElementById("fill");
 fill.innerHTML=`<option value="">セットを選択…</option>`+SETS.map(s=>`<option value="${s.id}">${s.name}（${Object.keys(s.items).length}部位）</option>`).join("");
-fill.addEventListener("change",()=>{const id=fill.value; if(!id) return; for(const k of Object.keys(byId[id].items)) sel[k]=id; save(); render(); fill.value="";});
-document.getElementById("reset").addEventListener("click",()=>{sel={}; save(); render();});
+fill.addEventListener("change",()=>{const id=fill.value; if(!id) return; const n={...sel}; for(const k of Object.keys(byId[id].items)) n[k]=id;
+  if(!active.includes(id)){ const a=active.filter(x=>countsOf(n)[x]); if(a.length>=MAX_ACTIVE) a.pop(); a.push(id); active=a; }
+  sel=n; save(); render(); fill.value="";});
+document.getElementById("reset").addEventListener("click",()=>{sel={}; active=[]; save(); render();});
 
 function render(){
-  const R=compute(sel);
+  const R=compute(sel,active);
   let n=0;
   for(const [k] of SLOTS){
     const el=document.getElementById("s-"+k), id=sel[k], set=id&&byId[id]?.items[k]?byId[id]:null;
@@ -400,17 +422,27 @@ function render(){
       el.setAttribute("aria-label",`${SLOTNAME[k]}：未装備（選ぶ）`); }
   }
   document.getElementById("eqn").innerHTML=`${n}<span>/12</span>`;
-  const used=SETS.filter(s=>R.counts[s.id]).sort((a,b)=>R.counts[b.id]-R.counts[a.id]);
+  const used=SETS.filter(s=>R.counts[s.id]).sort((a,b)=>(active.includes(b.id)-active.includes(a.id))||(R.counts[b.id]-R.counts[a.id]));
+  const full=active.length>=MAX_ACTIVE;
+  document.getElementById("actn").textContent=`有効 ${active.length}/${MAX_ACTIVE}`;
   document.getElementById("coreSets").innerHTML=used.length?used.map(s=>{const c=R.counts[s.id];
-    return `<div class="cs" style="--c:${SETCOLOR[s.id]}"><span class="nm"><span class="gem"></span>${s.name}</span>
+    return `<div class="cs${active.includes(s.id)?"":" off"}" style="--c:${SETCOLOR[s.id]}"><span class="nm"><span class="gem"></span>${s.name}</span>
       <span class="pips">${Array.from({length:Object.keys(s.items).length},(_,i)=>`<span class="pip${i<c?" f":""}"></span>`).join("")}</span></div>`;}).join(""):'<span class="empty-msg">まだ何も装備していません</span>';
-  document.getElementById("sets").innerHTML=used.length?used.map(s=>{const c=R.counts[s.id];
-    const tiers=Object.keys(s.bonus).map(Number).map(t=>`<div class="tier${c>=t?" on":""}"><span class="t">${t}SET</span><span class="list">${s.bonus[t].map(chip).join("")}</span></div>`).join("");
-    return `<div class="set"><div class="set-h"><span class="gem" style="--c:${SETCOLOR[s.id]}"></span><strong>${s.name}</strong><span class="cnt">${c}/${Object.keys(s.items).length}</span></div>${tiers}</div>`;}).join(""):'<p class="empty-msg">部位を選ぶとここにセット効果が出ます。</p>';
+  document.getElementById("sets").innerHTML=used.length?used.map(s=>{const c=R.counts[s.id], on=active.includes(s.id);
+    const tg=`<button type="button" class="tg${on?" is-on":""}" data-set="${s.id}" aria-pressed="${on}" ${!on&&full?'disabled title="有効にできるのは3セットまでです"':""}>${on?"有効":"無効"}</button>`;
+    const tiers=Object.keys(s.bonus).map(Number).map(t=>`<div class="tier${on&&c>=t?" on":""}"><span class="t">${t}SET</span><span class="list">${s.bonus[t].map(chip).join("")}</span></div>`).join("");
+    return `<div class="set${on?"":" off"}"><div class="set-h"><span class="gem" style="--c:${SETCOLOR[s.id]}"></span><strong>${s.name}</strong><span class="cnt">${c}/${Object.keys(s.items).length}</span>${tg}</div>${tiers}</div>`;}).join(""):'<p class="empty-msg">部位を選ぶとここにセット効果が出ます。</p>';
   const rows=ORDER.filter(k=>R.tot[k]).map(k=>{const s=STATS[k];
     return `<div class="row"><span class="k">${s.l}${s.d?'<span class="dd">D</span>':""}</span><span class="v">${fmt(k,R.tot[k])}</span></div>`;});
   document.getElementById("totals").innerHTML=rows.join("")||'<p class="empty-msg">まだ何も装備していません。</p>';
 }
+
+document.getElementById("sets").addEventListener("click",ev=>{
+  const b=ev.target.closest(".tg"); if(!b||b.disabled) return; const id=b.dataset.set;
+  if(active.includes(id)) active=active.filter(x=>x!==id); else if(active.length<MAX_ACTIVE) active=[...active,id];
+  save(); render();
+  document.querySelector(`.tg[data-set="${id}"]`)?.focus();
+});
 
 // ---- picker ----
 const ov=document.getElementById("ov"), pkBody=document.getElementById("pk-body");
@@ -420,7 +452,7 @@ function openPicker(k){
   document.getElementById("pk-title").textContent=SLOTNAME[k]+"を選ぶ";
   const fr=document.getElementById("pk-frame"); fr.innerHTML=svg(k,28);
   const curId=sel[k]; if(curId){fr.style.setProperty("--c",SETCOLOR[curId]);fr.style.setProperty("--g",SETCOLOR[curId]+"40");}else{fr.style.removeProperty("--c");fr.style.removeProperty("--g");}
-  const base=compute(sel);
+  const base=compute(sel,active);
   const cands=[...SETS.filter(s=>s.items[k]).map(s=>s.id),""];
   cands.sort((a,b)=>(b===(curId||"__"))-(a===(curId||"__")));
   pkBody.innerHTML=cands.map(id=>card(k,id,base)).join("");
@@ -431,11 +463,14 @@ function openPicker(k){
 function closePicker(){ ov.hidden=true; document.body.style.overflow=""; const b=document.getElementById("s-"+pkSlot); pkSlot=null; b?.focus(); }
 function card(k,id,base){
   const nsel={...sel}; if(id) nsel[k]=id; else delete nsel[k];
-  const R=compute(nsel), isCur=(sel[k]||"")===id, set=id?byId[id]:null;
+  const nact=nextActive(sel,nsel,active);
+  const R=compute(nsel,nact), isCur=(sel[k]||"")===id, set=id?byId[id]:null;
   const badges=[];
   if(isCur) badges.push('<span class="badge now">装備中</span>');
   const gained=[...R.tiers].filter(x=>!base.tiers.has(x)), lost=[...base.tiers].filter(x=>!R.tiers.has(x));
-  if(set){
+  if(set && !nact.includes(id)){
+    badges.push(`<span class="badge">${R.counts[id]}部位目・セット効果は無効（有効は3つまで）</span>`);
+  } else if(set){
     const c=R.counts[id]||0, keys=Object.keys(set.bonus).map(Number).sort((a,b)=>a-b);
     const g=gained.filter(x=>x.startsWith(id+":")).map(x=>+x.split(":")[1]);
     if(g.length) badges.push(`<span class="badge fire">${Math.max(...g)}セット発動</span>`);
@@ -461,7 +496,7 @@ function card(k,id,base){
   </button>`;
 }
 pkBody.addEventListener("click",ev=>{const c=ev.target.closest(".cand"); if(!c) return;
-  const id=c.dataset.id; if(id) sel[pkSlot]=id; else delete sel[pkSlot]; save(); render(); closePicker();});
+  const id=c.dataset.id, n={...sel}; if(id) n[pkSlot]=id; else delete n[pkSlot]; applySel(n); closePicker();});
 document.getElementById("pk-close").addEventListener("click",closePicker);
 ov.addEventListener("click",ev=>{ if(ev.target===ov) closePicker(); });
 document.addEventListener("keydown",ev=>{ if(ev.key==="Escape"&&!ov.hidden) closePicker(); });
