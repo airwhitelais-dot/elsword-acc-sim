@@ -119,6 +119,63 @@ select,button{font:inherit;color:var(--ink)}
 .row .k .dd{margin-left:6px;font-size:10px;font-weight:700;color:var(--d)}
 .row .v{font-family:var(--f-num);font-weight:700;font-size:16px;color:var(--title);font-variant-numeric:tabular-nums;white-space:nowrap}
 
+/* build switch + compare */
+.seg{display:inline-flex}
+.seg button{background:var(--card);border:1px solid var(--frame);border-radius:0;padding:8px 14px;min-height:40px;cursor:pointer;font-weight:700;color:var(--muted)}
+.seg button+button{border-left:0}
+.seg button.on{background:var(--title);border-color:var(--title);color:#fff}
+#cmpBtn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+.tb-sep{width:1px;height:28px;background:var(--line);margin:0 4px}
+body.cmp-on .main{display:none}
+body.cmp-on .seg{display:none}
+.cmp{display:grid;gap:16px}
+.cmp-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+.cmp-tools{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.cmp-tools button{background:var(--card);border:1px solid var(--frame);border-radius:0;padding:6px 14px;min-height:36px;cursor:pointer;font-size:13px}
+.cmp-tools button:hover{border-color:var(--accent)}
+.cmp-col .win-h .bl{font-family:var(--f-num);font-weight:700;font-size:13px;color:#fff;background:var(--bc);padding:1px 9px;letter-spacing:.06em}
+.cmp-col[data-b="A"]{--bc:#1a73ff}
+.cmp-col[data-b="B"]{--bc:#e0572a}
+.cmp-col{box-shadow:inset 0 0 0 1px #fff,inset 0 3px 0 var(--bc)}
+.cmp-slots{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px 10px;padding:12px 14px}
+.cmp-slots .c{display:grid;gap:6px;align-content:start;min-width:0}
+.cslot{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:5px 6px;background:var(--card);border:1px solid var(--line);border-left:2px solid var(--frame);border-radius:0;cursor:pointer;min-width:0}
+.cslot:hover{border-color:var(--accent)}
+.cslot .frame{width:40px;height:40px}
+.cslot .frame svg{width:22px;height:22px}
+.cslot.empty .frame{color:var(--icon-off)}
+.cslot .info{gap:0;line-height:1.35}
+.cslot .sl{font-size:10px;letter-spacing:.02em}
+.cslot .sn{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cslot.empty .sn{color:var(--off);font-weight:500}
+.cslot.diff{background:#fff7e0;border-color:#e6b84a;border-left-color:#c48a16}
+.cslot.diff .sl::after{content:"違い";margin-left:6px;font-size:9px;font-weight:700;color:#8a5a00;background:#ffe7a8;padding:0 5px;letter-spacing:0}
+.cmp-sets{display:grid;gap:6px;padding:0 14px 14px}
+.cmp-sets .lbl{font-size:11px;color:var(--muted);letter-spacing:.08em}
+.cset{display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--card);border:1px solid var(--line);font-size:12px;min-width:0}
+.cset strong{font-size:12px;min-width:0}
+.cset .tiers{display:flex;gap:4px;margin-left:auto;flex:none}
+.cset .tb{font-family:var(--f-num);font-size:10px;font-weight:600;padding:1px 6px;border:1px solid var(--line);color:var(--off)}
+.cset .tb.on{background:var(--on-bg);border-color:var(--on-bd);color:var(--accent-d)}
+.cset .cnt{font-family:var(--f-num);font-weight:600;font-size:11px;color:var(--accent-d);flex:none}
+.cset .tg{flex:none;font-size:11px;font-weight:700;padding:2px 9px;min-height:26px;border:1px solid var(--frame);background:var(--card);color:var(--muted);border-radius:0;cursor:pointer}
+.cset .tg.is-on{background:var(--accent);border-color:var(--accent);color:#fff}
+.cset .tg:disabled{opacity:.45;cursor:not-allowed}
+.cset.off{background:#f4f6f9}.cset.off strong{color:var(--muted)}
+.cmp-txt{display:flex;flex-wrap:wrap;gap:4px}
+.cmp-tbl-wrap{overflow-x:auto;padding:4px 18px 12px}
+.cmp-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.cmp-tbl th{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-align:right;padding:8px 10px;border-bottom:1px solid var(--line)}
+.cmp-tbl th:first-child{text-align:left}
+.cmp-tbl th.a{color:#1a73ff}.cmp-tbl th.b{color:#e0572a}
+.cmp-tbl td{padding:7px 10px;border-bottom:1px dashed var(--line);text-align:right;font-family:var(--f-num);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--title)}
+.cmp-tbl td:first-child{text-align:left;font-family:var(--f-body);font-weight:500;color:var(--ink2);white-space:normal}
+.cmp-tbl td:first-child .dd{margin-left:6px;font-size:10px;font-weight:700;color:var(--d)}
+.cmp-tbl td.z{color:var(--off);font-weight:600}
+.cmp-tbl td.up{color:var(--up)}.cmp-tbl td.down{color:var(--dn)}
+.cmp-tbl tr.chg td:first-child{font-weight:700}
+.cmp-tbl tr.txtrow td{font-family:var(--f-body);font-weight:500;font-size:12px;text-align:left;white-space:normal;vertical-align:top;color:var(--ink2)}
+
 /* picker */
 .ov{position:fixed;inset:0;background:#0b1a2e66;display:flex;align-items:center;justify-content:center;padding:24px 16px;z-index:10}
 .sheet{width:min(740px,100%);max-height:min(88vh,920px);display:flex;flex-direction:column;background:var(--panel);clip-path:var(--ch14);box-shadow:inset 0 0 0 1px #fff,inset 0 3px 0 var(--accent)}
@@ -165,6 +222,11 @@ select,button{font:inherit;color:var(--ink)}
       <p>レアアバター(右)のアクセ部位ごとにセットを選ぶと、部位の能力値・発動中のセット効果・合計値を表示します。<br>数値やセット効果の情報は<a href="https://elsword-log.com/" target="_blank" rel="noopener">エルソログ</a>さんからお借りしています。</p>
     </div>
     <div class="toolbar">
+      <span class="seg" role="group" aria-label="編集する構成" id="bsel">
+        <button type="button" data-b="A">構成A</button><button type="button" data-b="B">構成B</button>
+      </span>
+      <button type="button" id="cmpBtn" aria-pressed="false">比較モード</button>
+      <span class="tb-sep"></span>
       <label for="fill">全部位をまとめて</label>
       <select id="fill"></select>
       <button id="reset" type="button">すべて外す</button>
@@ -195,6 +257,21 @@ select,button{font:inherit;color:var(--ink)}
         <div class="tot" id="totals"></div>
       </section>
     </div>
+  </div>
+
+  <div class="cmp" id="cmp" hidden>
+    <div class="cmp-cols">
+      <section class="win cmp-col" data-b="A" id="cmpA"></section>
+      <section class="win cmp-col" data-b="B" id="cmpB"></section>
+    </div>
+    <div class="cmp-tools">
+      <button type="button" id="cpAB">構成A → 構成B にコピー</button>
+      <button type="button" id="cpBA">構成B → 構成A にコピー</button>
+    </div>
+    <section class="win">
+      <div class="win-h"><h2>合計の比較</h2><span class="hint">差は「B − A」です</span></div>
+      <div class="cmp-tbl-wrap"><table class="cmp-tbl" id="cmpTbl"></table></div>
+    </section>
   </div>
 
   <div class="ov" id="ov" hidden>
@@ -370,7 +447,15 @@ function nextActive(oldSel,newSel,act){
   return a;
 }
 active=nextActive(sel,sel,active);
-const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify({sel,active})); }catch(_){} };
+// two builds (A/B); sel/active always point at the build being edited
+const KEY4="elsAccSim.v4";
+let builds=null, cur="A", cmpMode=false;
+try{ const v=JSON.parse(localStorage.getItem(KEY4)||"null"); if(v&&v.builds&&v.builds.A&&v.builds.B){ builds=v.builds; cur=v.cur==="B"?"B":"A"; cmpMode=!!v.cmp; } }catch(_){}
+if(!builds) builds={A:{sel,active},B:{sel:{...sel},active:[...active]}};
+for(const b of ["A","B"]){ const x=builds[b]; if(!x.sel||typeof x.sel!=="object") x.sel={}; if(!Array.isArray(x.active)) x.active=[]; x.active=nextActive(x.sel,x.sel,x.active); }
+sel=builds[cur].sel; active=builds[cur].active;
+function use(b){ builds[cur].sel=sel; builds[cur].active=active; cur=b; sel=builds[b].sel; active=builds[b].active; }
+const save=()=>{ builds[cur].sel=sel; builds[cur].active=active; try{ localStorage.setItem(KEY4,JSON.stringify({builds,cur,cmp:cmpMode})); }catch(_){} };
 function applySel(newSel){ active=nextActive(sel,newSel,active); sel=newSel; save(); render(); }
 
 const fmt=(k,v)=>(v>0?"+":"")+v.toLocaleString("ja-JP")+(STATS[k].u??"%");
@@ -408,7 +493,7 @@ fill.addEventListener("change",()=>{const id=fill.value; if(!id) return; const n
   sel=n; save(); render(); fill.value="";});
 document.getElementById("reset").addEventListener("click",()=>{sel={}; active=[]; save(); render();});
 
-function render(){
+var render=function(){
   const R=compute(sel,active);
   let n=0;
   for(const [k] of SLOTS){
@@ -449,7 +534,7 @@ const ov=document.getElementById("ov"), pkBody=document.getElementById("pk-body"
 let pkSlot=null;
 function openPicker(k){
   pkSlot=k;
-  document.getElementById("pk-title").textContent=SLOTNAME[k]+"を選ぶ";
+  document.getElementById("pk-title").textContent=(cmpMode?`構成${cur}の`:"")+SLOTNAME[k]+"を選ぶ";
   const fr=document.getElementById("pk-frame"); fr.innerHTML=svg(k,28);
   const curId=sel[k]; if(curId){fr.style.setProperty("--c",SETCOLOR[curId]);fr.style.setProperty("--g",SETCOLOR[curId]+"40");}else{fr.style.removeProperty("--c");fr.style.removeProperty("--g");}
   const base=compute(sel,active);
@@ -460,7 +545,7 @@ function openPicker(k){
   (pkBody.querySelector(".cand.cur")||pkBody.querySelector(".cand"))?.focus();
   pkBody.scrollTop=0;
 }
-function closePicker(){ ov.hidden=true; document.body.style.overflow=""; const b=document.getElementById("s-"+pkSlot); pkSlot=null; b?.focus(); }
+function closePicker(){ ov.hidden=true; document.body.style.overflow=""; const b=document.getElementById(cmpMode?`c${cur}-${pkSlot}`:"s-"+pkSlot); pkSlot=null; b?.focus(); }
 function card(k,id,base){
   const nsel={...sel}; if(id) nsel[k]=id; else delete nsel[k];
   const nact=nextActive(sel,nsel,active);
@@ -500,6 +585,61 @@ pkBody.addEventListener("click",ev=>{const c=ev.target.closest(".cand"); if(!c) 
 document.getElementById("pk-close").addEventListener("click",closePicker);
 ov.addEventListener("click",ev=>{ if(ev.target===ov) closePicker(); });
 document.addEventListener("keydown",ev=>{ if(ev.key==="Escape"&&!ov.hidden) closePicker(); });
+
+// ---- build switch / compare mode ----
+document.getElementById("bsel").addEventListener("click",ev=>{const b=ev.target.closest("button"); if(!b||b.dataset.b===cur) return; use(b.dataset.b); save(); render();});
+document.getElementById("cmpBtn").addEventListener("click",()=>{cmpMode=!cmpMode; save(); render();});
+function copyBuild(from,to){ use(from); const src={sel:{...sel},active:[...active]}; use(to); sel=src.sel; active=src.active; save(); render(); }
+document.getElementById("cpAB").addEventListener("click",()=>copyBuild("A","B"));
+document.getElementById("cpBA").addEventListener("click",()=>copyBuild("B","A"));
+document.getElementById("cmp").addEventListener("click",ev=>{
+  const sl=ev.target.closest(".cslot");
+  if(sl){ use(sl.dataset.b); openPicker(sl.dataset.slot); return; }
+  const tg=ev.target.closest(".tg");
+  if(tg&&!tg.disabled){ use(tg.dataset.b); const id=tg.dataset.set;
+    if(active.includes(id)) active=active.filter(x=>x!==id); else if(active.length<MAX_ACTIVE) active=[...active,id];
+    save(); render(); document.querySelector(`#cmp .tg[data-b="${tg.dataset.b}"][data-set="${id}"]`)?.focus(); }
+});
+
+function renderCompare(){
+  builds[cur].sel=sel; builds[cur].active=active;
+  const R={A:compute(builds.A.sel,builds.A.active),B:compute(builds.B.sel,builds.B.active)};
+  for(const b of ["A","B"]){
+    const o=b==="A"?"B":"A", bs=builds[b].sel, os=builds[o].sel, act=builds[b].active, r=R[b];
+    const slot=k=>{ const id=bs[k], set=id&&byId[id]?.items[k]?byId[id]:null, diff=(bs[k]||"")!==(os[k]||"");
+      const st=set?` style="--c:${SETCOLOR[id]};--g:${SETCOLOR[id]}40"`:"";
+      return `<button type="button" class="cslot${set?"":" empty"}${diff?" diff":""}" id="c${b}-${k}" data-b="${b}" data-slot="${k}" aria-label="構成${b} ${SLOTNAME[k]}：${set?set.name:"未装備"}">
+        <span class="frame"${st}>${svg(k,22)}</span><span class="info"><span class="sl">${SLOTNAME[k]}</span><span class="sn">${set?set.name:"未装備"}</span></span></button>`; };
+    const used=SETS.filter(s=>r.counts[s.id]).sort((x,y)=>(act.includes(y.id)-act.includes(x.id))||(r.counts[y.id]-r.counts[x.id]));
+    const full=act.length>=MAX_ACTIVE;
+    const sets=used.map(s=>{ const c=r.counts[s.id], on=act.includes(s.id), n=Object.keys(s.items).length;
+      const tiers=Object.keys(s.bonus).map(Number).map(t=>`<span class="tb${on&&c>=t?" on":""}">${t}SET</span>`).join("");
+      return `<div class="cset${on?"":" off"}"><span class="gem" style="--c:${SETCOLOR[s.id]}"></span><strong>${s.name}</strong><span class="cnt">${c}/${n}</span><span class="tiers">${tiers}</span>
+        <button type="button" class="tg${on?" is-on":""}" data-b="${b}" data-set="${s.id}" aria-pressed="${on}" ${!on&&full?'disabled title="有効にできるのは3セットまでです"':""}>${on?"有効":"無効"}</button></div>`; }).join("");
+    const n=SLOTS.filter(([k])=>bs[k]&&byId[bs[k]]?.items[k]).length;
+    document.getElementById("cmp"+b).innerHTML=`<div class="win-h"><span class="bl">${b}</span><h2>構成${b}</h2><span class="hint">装備 ${n}/12 ・ 有効 ${act.length}/${MAX_ACTIVE}</span></div>
+      <div class="cmp-slots"><div class="c">${LEFT.map(slot).join("")}</div><div class="c">${RIGHT.map(slot).join("")}</div></div>
+      <div class="cmp-sets"><span class="lbl">セット（有効にできるのは3セットまで）</span>${sets||'<span class="empty-msg">まだ何も装備していません</span>'}</div>`;
+  }
+  // totals table
+  const keys=ORDER.filter(k=>k!=="txt"&&(R.A.tot[k]||R.B.tot[k]));
+  const cell=(k,v)=>v?`<td>${fmt(k,v)}</td>`:`<td class="z">0</td>`;
+  const rows=keys.map(k=>{ const a=R.A.tot[k]||0, b=R.B.tot[k]||0, d=b-a, s=STATS[k];
+    const good=LOWER_BETTER.has(k)? d<0 : d>0;
+    const dc=d===0?`<td class="z">±0</td>`:`<td class="${good?"up":"down"}">${fmt(k,d)}</td>`;
+    return `<tr class="${d?"chg":""}"><td>${s.l}${s.d?'<span class="dd">D</span>':""}</td>${cell(k,a)}${cell(k,b)}${dc}</tr>`; }).join("");
+  const tA=[...R.A.texts], tB=[...R.B.texts];
+  const txt=(tA.length||tB.length)?`<tr class="txtrow"><td>その他の効果</td><td><span class="cmp-txt">${tA.map(n=>`<span class="chip txt">${n}</span>`).join("")||"―"}</span></td><td><span class="cmp-txt">${tB.map(n=>`<span class="chip txt">${n}</span>`).join("")||"―"}</span></td><td></td></tr>`:"";
+  document.getElementById("cmpTbl").innerHTML=`<thead><tr><th>項目</th><th class="a">構成A</th><th class="b">構成B</th><th>差（B−A）</th></tr></thead><tbody>${rows||'<tr><td colspan="4" class="z">まだ何も装備していません</td></tr>'}${txt}</tbody>`;
+}
+const baseRender=render;
+render=function(){
+  document.body.classList.toggle("cmp-on",cmpMode);
+  document.getElementById("cmp").hidden=!cmpMode;
+  const cb=document.getElementById("cmpBtn"); cb.setAttribute("aria-pressed",String(cmpMode)); cb.textContent=cmpMode?"比較モードを終了":"比較モード";
+  for(const b of document.querySelectorAll("#bsel button")){ b.classList.toggle("on",b.dataset.b===cur); b.setAttribute("aria-pressed",String(b.dataset.b===cur)); }
+  baseRender(); if(cmpMode) renderCompare();
+};
 
 render();
 </script>
