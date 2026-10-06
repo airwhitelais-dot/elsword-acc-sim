@@ -133,6 +133,7 @@ body.cmp-on .seg{display:none}
 .cmp-tools{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
 .cmp-tools button{background:var(--card);border:1px solid var(--frame);border-radius:0;padding:6px 14px;min-height:36px;cursor:pointer;font-size:13px}
 .cmp-tools button:hover{border-color:var(--accent)}
+.cmp-tools .swap{font-weight:700;color:var(--title);border-color:var(--title)}
 .cmp-col .win-h .bl{font-family:var(--f-num);font-weight:700;font-size:13px;color:#fff;background:var(--bc);padding:1px 9px;letter-spacing:.06em}
 .cmp-col[data-b="A"]{--bc:#1a73ff}
 .cmp-col[data-b="B"]{--bc:#e0572a}
@@ -266,6 +267,7 @@ body.cmp-on .seg{display:none}
     </div>
     <div class="cmp-tools">
       <button type="button" id="cpAB">構成A → 構成B にコピー</button>
+      <button type="button" id="swapAB" class="swap">⇄ 構成AとBを入れ替え</button>
       <button type="button" id="cpBA">構成B → 構成A にコピー</button>
     </div>
     <section class="win">
@@ -592,6 +594,12 @@ document.getElementById("cmpBtn").addEventListener("click",()=>{cmpMode=!cmpMode
 function copyBuild(from,to){ use(from); const src={sel:{...sel},active:[...active]}; use(to); sel=src.sel; active=src.active; save(); render(); }
 document.getElementById("cpAB").addEventListener("click",()=>copyBuild("A","B"));
 document.getElementById("cpBA").addEventListener("click",()=>copyBuild("B","A"));
+document.getElementById("swapAB").addEventListener("click",()=>{
+  builds[cur].sel=sel; builds[cur].active=active;
+  const a=builds.A; builds.A=builds.B; builds.B=a;
+  sel=builds[cur].sel; active=builds[cur].active; save(); render();
+  document.getElementById("swapAB").focus();
+});
 document.getElementById("cmp").addEventListener("click",ev=>{
   const sl=ev.target.closest(".cslot");
   if(sl){ use(sl.dataset.b); openPicker(sl.dataset.slot); return; }
